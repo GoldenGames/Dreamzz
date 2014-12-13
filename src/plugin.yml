@@ -1,0 +1,4 @@
+name: Dreamzz
+version: 0.1
+main: me.mani.dreamzz.Dreamzz
+depend: [GoldenAPI]

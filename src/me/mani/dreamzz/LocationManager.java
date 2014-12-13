@@ -17,4 +17,8 @@ public class LocationManager {
 		this.teamLocations = teamLocations;
 	}
 	
+	public Location getLocation(Team team) {
+		return teamLocations.get(team);
+	}
+	
 }
