@@ -10,6 +10,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class LobbyListener implements Listener {
 	
+	private GameManager gameManager;
+	
+	public LobbyListener(GameManager gameManager) {
+		this.gameManager = gameManager;
+	}
+	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent ev) {
 		ev.setJoinMessage(GameManager.PREFIX + "§a[>>>] §e" + ev.getPlayer().getName());

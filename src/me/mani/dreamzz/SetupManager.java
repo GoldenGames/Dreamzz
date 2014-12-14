@@ -10,8 +10,10 @@ import me.mani.goldenapi.mysql.ConvertUtil;
 import me.mani.goldenapi.mysql.DatabaseManager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.BlockState;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class SetupManager {
@@ -61,22 +63,25 @@ public class SetupManager {
 	
 	private void loadLocations() throws Exception {
 		List<Team> allTeams = new ArrayList<>();
-		HashMap<Team, Location> teamLocations = new HashMap<>();		
-		for (int i = 1; i < map.getTeamCount(); i++) {
-			TeamColor teamColor = TeamColor.values()[i - 1];
+		HashMap<Team, Location> spawnLocations = new HashMap<>();
+		HashMap<Team, Location> bedLocations = new HashMap<>();	
+		for (int i = 0; i < map.getTeamCount(); i++) {
+			TeamColor teamColor = TeamColor.values()[i];
 			if (!map.getMapInfo().contains("teams." + Alias.getTeamAlias(teamColor)))
 				continue;
 			Team team = new Team(teamColor, map.getPlayerCount());
-			Bukkit.broadcastMessage(teamColor.toString());
-			Location loc = ConvertUtil.toLocation(map.getMapInfo().getString("teams." + Alias.getTeamAlias(teamColor) + ".spawn"), map.getWorld());
+			System.out.println(teamColor.toString());
+			Location spawn = ConvertUtil.toLocation(map.getMapInfo().getString("teams." + Alias.getTeamAlias(teamColor) + ".spawn"), map.getWorld());
+			Location bed = ConvertUtil.toLocation(map.getMapInfo().getString("teams." + Alias.getTeamAlias(teamColor) + ".bed"), map.getWorld());
 			allTeams.add(team);
-			teamLocations.put(team, loc);
+			spawnLocations.put(team, spawn);
+			bedLocations.put(team, bed);
 		}
 		
 		// TODO: Add spawn Locations
 		
 		teamManager = new TeamManager(allTeams);
-		locationManager = new LocationManager(null, null, teamLocations);
+		locationManager = new LocationManager(null, null, spawnLocations, bedLocations);
 	}
 	
 	public Map getMap() {
