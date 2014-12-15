@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.material.Bed;
 
 public class IngameListener implements Listener {
@@ -34,8 +36,8 @@ public class IngameListener implements Listener {
 				bedLoc = ev.getBlock().getRelative(bed.getFacing()).getLocation();	
 			gameManager.onBedBreak(bedLoc, ev.getPlayer());
 		}
-//		else
-//			ev.setCancelled(true);
+		else
+			ev.setCancelled(true);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -46,6 +48,14 @@ public class IngameListener implements Listener {
 			byte data = (byte) (0 + (int) (Math.random() * ((15 - 0) + 1)));
 			ev.getBlock().setData(data);
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent ev) {
+		if (!(ev.getRightClicked() instanceof Villager))
+			return;
+		ev.getPlayer().openInventory(gameManager.shopManager.getShopInventory().getInventory());
+		ev.setCancelled(true);
 	}
 
 }

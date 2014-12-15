@@ -5,16 +5,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import me.mani.dreamzz.ressource.Ressource;
+import me.mani.dreamzz.ressource.RessourceManager;
+import me.mani.dreamzz.ressource.RessourceType;
+import me.mani.dreamzz.shop.ShopManager;
+import me.mani.dreamzz.util.ItemUtil;
 import me.mani.goldenapi.GoldenAPI;
 import me.mani.goldenapi.mysql.ConvertUtil;
 import me.mani.goldenapi.mysql.DatabaseManager;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.BlockState;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 public class SetupManager {
 
@@ -24,6 +29,8 @@ public class SetupManager {
 	private Map map;
 	private TeamManager teamManager;
 	private LocationManager locationManager;
+	private RessourceManager ressourceManager;
+	private ShopManager shopManager;
 	
 	private DatabaseManager dbManager;
 	
@@ -37,6 +44,7 @@ public class SetupManager {
 			loadMySQL();
 			loadMap();
 			loadLocations();
+			shopManager = new ShopManager();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -62,6 +70,9 @@ public class SetupManager {
 	}
 	
 	private void loadLocations() throws Exception {
+		
+		// Team Spawn and Bed Locations
+		
 		List<Team> allTeams = new ArrayList<>();
 		HashMap<Team, Location> spawnLocations = new HashMap<>();
 		HashMap<Team, Location> bedLocations = new HashMap<>();	
@@ -78,10 +89,21 @@ public class SetupManager {
 			bedLocations.put(team, bed);
 		}
 		
-		// TODO: Add spawn Locations
+		// TODO: Add Lobby Spawn Location
 		
 		teamManager = new TeamManager(allTeams);
 		locationManager = new LocationManager(null, null, spawnLocations, bedLocations);
+		
+		// Ressource Locations
+		
+		ressourceManager = new RessourceManager(gameManager.getPlugin());
+				
+		for (String s : map.getMapInfo().getStringList("goldSpawner"))
+			ressourceManager.registerRessource(new Ressource(RessourceType.GOLD, ConvertUtil.toLocation(s, map.getWorld())));
+		for (String s : map.getMapInfo().getStringList("ironSpawner"))
+			ressourceManager.registerRessource(new Ressource(RessourceType.IRON, ConvertUtil.toLocation(s, map.getWorld())));
+		for (String s : map.getMapInfo().getStringList("claySpawner"))
+			ressourceManager.registerRessource(new Ressource(RessourceType.CLAY, ConvertUtil.toLocation(s, map.getWorld())));
 	}
 	
 	public Map getMap() {
@@ -94,6 +116,14 @@ public class SetupManager {
 	
 	public LocationManager getLocationManager() {
 		return locationManager;
+	}
+	
+	public RessourceManager getRessourceManager() {
+		return ressourceManager;
+	}
+	
+	public ShopManager getShopManager() {
+		return shopManager;
 	}
 	
 }

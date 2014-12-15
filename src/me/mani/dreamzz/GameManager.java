@@ -3,6 +3,8 @@ package me.mani.dreamzz;
 import java.util.Arrays;
 
 import me.mani.dreamzz.CountdownManager.Countdown;
+import me.mani.dreamzz.ressource.RessourceManager;
+import me.mani.dreamzz.shop.ShopManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,8 +18,11 @@ public class GameManager {
 	public static final String PREFIX = "§7[§aDreamzz§7] §6";
 	
 	private JavaPlugin plugin;
-	private TeamManager teamManager;
-	private LocationManager locationManager;
+	public TeamManager teamManager;
+	public LocationManager locationManager;
+	public RessourceManager ressourceManager;
+	public ShopManager shopManager;
+	
 	private Map map;
 	private Listener currentListener;
 	
@@ -40,6 +45,8 @@ public class GameManager {
 		map = setupManager.getMap();
 		teamManager = setupManager.getTeamManager();
 		locationManager = setupManager.getLocationManager();
+		ressourceManager = setupManager.getRessourceManager();
+		shopManager = setupManager.getShopManager();
 		
 		Bukkit.getPluginManager().registerEvents(new GlobalListener(this), plugin);
 		
@@ -101,6 +108,7 @@ public class GameManager {
 		for (Team team : teamManager.getAllTeams())
 			team.teleport(locationManager.getSpawnLocation(team));
 		
+		ressourceManager.startSpawning();
 	}
 	
 	public void stopGame() {

@@ -19,7 +19,7 @@ public class GlobalListener implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent ev) {
 		Player p = ev.getPlayer();
-		if (p.getItemInHand() == null && ev.getAction() != Action.RIGHT_CLICK_BLOCK)
+		if (p.getItemInHand() == null || ev.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
 		ItemStack item = p.getItemInHand();
 		if (item.getType() != null && item.getType() == Material.BONE)
