@@ -3,7 +3,10 @@ package me.mani.dreamzz.shop;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.mani.dreamzz.GameManager;
+
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -55,35 +58,45 @@ public class ShopManager {
 		ItemStack cursorItem = p.getItemOnCursor();
 		ItemStack ressourceNeeded = item.getRessourceType().toItemStack();
 		if (!inv.containsAtLeast(ressourceNeeded, item.getRessourceCount())) {
-			// XXX: Player hasn't enough ressources!
-			System.out.println("Player hasn't enough ressources!");
+			p.sendMessage(GameManager.PREFIX + "Du hast nicht genügend Ressourcen für den Kauf!");
+			p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.1f, 1f);
 			return;
 		}
 		else if (cursorItem != null && cursorItem.getType() != Material.AIR) {
-			if (!cursorItem.getType().equals(readyItem.getType())) {
-				// XXX: Player already have another item on cursor
-				System.out.println("Player already have another item on cursor");
+			if (!cursorItem.getType().equals(readyItem.getType()))
 				return;
-			}
 			else if (cursorItem.getItemMeta().equals(readyItem.getItemMeta())) {
 				if (cursorItem.getAmount() + readyItem.getAmount() < cursorItem.getMaxStackSize())
-				cursorItem.setAmount(cursorItem.getAmount() + readyItem.getAmount());
-				else {
-					// XXX: Player has already a full stack on the cursor
-					System.out.println("Player has already a full stack on the cursor");
+					cursorItem.setAmount(cursorItem.getAmount() + readyItem.getAmount());
+				else
 					return;
-				}
 				p.setItemOnCursor(cursorItem);
-				System.out.println("Complete - Amount added");
-				return;
 			}
 		}
+		else
+			p.setItemOnCursor(readyItem);
 		ressourceNeeded.setAmount(item.getRessourceCount());
 		inv.removeItem(ressourceNeeded);
-		p.setItemOnCursor(readyItem);
-		System.out.println("Complete - New Item");
-		
-		// TODO: FIXME: When the player has an item on the cursor the buttom code doesn't get executed!
+		p.playSound(p.getLocation(), Sound.ORB_PICKUP, 0.1f, 1f);
 	}		
+	
+	public void onItemShiftClick(Player p, int slot) {
+		if (!isShopItem(slot))
+			return;
+		ShopItem item = getShopItem(slot);
+		PlayerInventory inv = p.getInventory();
+		ItemStack readyItem = item.toItemStack();
+		ItemStack ressourceNeeded = item.getRessourceType().toItemStack();
+		ressourceNeeded.setAmount(item.getRessourceCount());
+		int times = 0;
+		while (inv.containsAtLeast(ressourceNeeded, item.getRessourceCount())) {
+			if (inv.addItem(readyItem).isEmpty() && times <= 64)
+				inv.removeItem(ressourceNeeded);
+			else
+				break;
+			times++;
+		}
+		p.playSound(p.getLocation(), Sound.ORB_PICKUP, 0.1f, 1f);
+	}
 
 }
