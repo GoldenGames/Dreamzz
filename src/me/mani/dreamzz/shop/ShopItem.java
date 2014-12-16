@@ -9,18 +9,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ShopItem {
 	
+	private int inventorySlot;
 	private String name;
 	private String lvl;
-	private ItemStack rawItem;
-	private int inventorySlot;
+	private ItemStack rawItem;	
 	private RessourceType ressourceType;
 	private int ressourceCount;	
 	
-	public ShopItem(String name, String lvl, ItemStack rawItem, int inventorySlot, RessourceType ressourceType, int ressourceCount) {
+	public ShopItem(int inventorySlot, String name, String lvl, ItemStack rawItem, RessourceType ressourceType, int ressourceCount) {
+		this.inventorySlot = inventorySlot;
 		this.name = name;
 		this.lvl = lvl;
-		this.rawItem = rawItem;
-		this.inventorySlot = inventorySlot;
+		this.rawItem = rawItem;	
 		this.ressourceType = ressourceType;
 		this.ressourceCount = ressourceCount;
 	}
@@ -38,6 +38,22 @@ public class ShopItem {
 	
 	public int getSlot() {
 		return inventorySlot;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public String getLvl() {
+		return lvl;
+	}
+
+	public RessourceType getRessourceType() {
+		return ressourceType;
+	}
+
+	public int getRessourceCount() {
+		return ressourceCount;
 	}
 
 }

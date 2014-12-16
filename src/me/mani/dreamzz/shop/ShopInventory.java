@@ -39,9 +39,13 @@ public class ShopInventory {
 		
 		// Waffen (Total: 7)
 		
-		shopManager.registerShopItem(new ShopItem("Schwert", "I", new ItemStack(Material.GOLD_SWORD), 1, RessourceType.IRON, 1));
-		shopManager.registerShopItem(new ShopItem("Schwert", "II", new ItemStack(Material.GOLD_SWORD), 2, RessourceType.IRON, 3));
-		shopManager.registerShopItem(new ShopItem("Schwert", "III", new ItemStack(Material.IRON_SWORD), 3, RessourceType.GOLD, 5));
+		shopManager.registerShopItem(new ShopItem(1, "Schwert", "I", new ItemStack(Material.GOLD_SWORD), RessourceType.IRON, 1));
+		shopManager.registerShopItem(new ShopItem(2, "Schwert", "II", new ItemStack(Material.GOLD_SWORD), RessourceType.IRON, 3));
+		shopManager.registerShopItem(new ShopItem(3, "Schwert", "III", new ItemStack(Material.IRON_SWORD), RessourceType.GOLD, 5));
+		shopManager.registerShopItem(new ShopItem(4, "Bogen", "I", new ItemStack(Material.BOW), RessourceType.GOLD, 4));
+		shopManager.registerShopItem(new ShopItem(5, "Bogen", "II", new ItemStack(Material.BOW), RessourceType.GOLD, 8));
+		shopManager.registerShopItem(new ShopItem(6, "Bogen", "III", new ItemStack(Material.BOW), RessourceType.GOLD, 16));
+		shopManager.registerShopItem(new ShopItem(7, "Pfeil", "", new ItemStack(Material.ARROW), RessourceType.GOLD, 1));
 		
 		for (ShopItem shopItem : shopManager.getShopItems())
 			inv.setItem(shopItem.getSlot(), shopItem.toItemStack());

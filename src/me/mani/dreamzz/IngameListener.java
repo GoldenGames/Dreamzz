@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.material.Bed;
 
@@ -56,6 +58,14 @@ public class IngameListener implements Listener {
 			return;
 		ev.getPlayer().openInventory(gameManager.shopManager.getShopInventory().getInventory());
 		ev.setCancelled(true);
+	}
+	
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent ev) {
+		if (gameManager.shopManager.isShopInventory(ev.getClickedInventory()) && ev.getCurrentItem() != null) {
+			ev.setCancelled(true);
+			gameManager.shopManager.onItemClick((Player) ev.getWhoClicked(), ev.getSlot());		
+		}
 	}
 
 }
