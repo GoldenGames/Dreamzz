@@ -47,6 +47,36 @@ public class ShopInventory {
 		shopManager.registerShopItem(new ShopItem(6, "Bogen", "III", new ItemStack(Material.BOW), RessourceType.GOLD, 16));
 		shopManager.registerShopItem(new ShopItem(7, "Pfeil", "", new ItemStack(Material.ARROW), RessourceType.GOLD, 1));
 		
+		// Essen (Total: 4)
+		
+		shopManager.registerShopItem(new ShopItem(10, "Essen", "I", new ItemStack(Material.POTATO_ITEM), RessourceType.CLAY, 1));
+		shopManager.registerShopItem(new ShopItem(12, "Essen", "II", new ItemStack(Material.BAKED_POTATO), RessourceType.CLAY, 3));
+		shopManager.registerShopItem(new ShopItem(14, "Essen", "III", new ItemStack(Material.GOLDEN_APPLE), RessourceType.GOLD, 2));
+		shopManager.registerShopItem(new ShopItem(16, "Essen", "IV", new ItemStack(Material.CAKE), RessourceType.IRON, 1));
+		
+		// Blöcke (Total: 4)
+		
+		shopManager.registerShopItem(new ShopItem(19, "Block", "I", new ItemStack(Material.WOOL), RessourceType.CLAY, 1));
+		shopManager.registerShopItem(new ShopItem(21, "Block", "II", new ItemStack(Material.STAINED_GLASS), RessourceType.CLAY, 3));
+		shopManager.registerShopItem(new ShopItem(23, "Block", "III", new ItemStack(Material.STAINED_CLAY), RessourceType.IRON, 2));
+		shopManager.registerShopItem(new ShopItem(25, "Liste", "", new ItemStack(Material.CHEST), RessourceType.IRON, 1));
+		
+		// Werkzeuge (Total: 4)
+		
+		shopManager.registerShopItem(new ShopItem(28, "Schere", "I", new ItemStack(Material.SHEARS), RessourceType.CLAY, 5));
+		shopManager.registerShopItem(new ShopItem(30, "Schere", "II", new ItemStack(Material.SHEARS), RessourceType.IRON, 3));
+		shopManager.registerShopItem(new ShopItem(32, "Spitzhacke", "I", new ItemStack(Material.WOOD_PICKAXE), RessourceType.IRON, 4));
+		shopManager.registerShopItem(new ShopItem(34, "Spitzhacke", "II", new ItemStack(Material.GOLD_PICKAXE), RessourceType.GOLD, 4));
+		
+		// Rüstung (Total: 6)
+		
+		shopManager.registerShopItem(new ShopItem(37, "Basishelm", "", new ItemStack(Material.LEATHER_HELMET), RessourceType.CLAY, 2));
+		shopManager.registerShopItem(new ShopItem(38, "Basishose", "", new ItemStack(Material.LEATHER_LEGGINGS), RessourceType.CLAY, 2));
+		shopManager.registerShopItem(new ShopItem(39, "Basisschuhe", "", new ItemStack(Material.LEATHER_BOOTS), RessourceType.CLAY, 2));
+		shopManager.registerShopItem(new ShopItem(41, "Rüstung", "I", new ItemStack(Material.CHAINMAIL_CHESTPLATE), RessourceType.IRON, 2));
+		shopManager.registerShopItem(new ShopItem(42, "Rüstung", "II", new ItemStack(Material.CHAINMAIL_CHESTPLATE), RessourceType.IRON, 5));
+		shopManager.registerShopItem(new ShopItem(43, "Rüstung", "III", new ItemStack(Material.CHAINMAIL_CHESTPLATE), RessourceType.GOLD, 3));
+		
 		for (ShopItem shopItem : shopManager.getShopItems())
 			inv.setItem(shopItem.getSlot(), shopItem.toItemStack());
 	}

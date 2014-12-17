@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.material.Bed;
 
 public class IngameListener implements Listener {
@@ -30,7 +31,9 @@ public class IngameListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent ev) {
 		if (placedBlocks.contains(ev.getBlock().getLocation()))
 			placedBlocks.remove(ev.getBlock().getLocation());
-		else if (ev.getBlock().getType() == Material.BED_BLOCK) {
+		else
+			ev.setCancelled(true);
+		if (ev.getBlock().getType() == Material.BED_BLOCK) {
 			Location bedLoc;
 			Bed bed = (Bed) ev.getBlock().getState().getData();
 			if (bed.isHeadOfBed())
@@ -38,9 +41,12 @@ public class IngameListener implements Listener {
 			else 
 				bedLoc = ev.getBlock().getRelative(bed.getFacing()).getLocation();	
 			gameManager.onBedBreak(bedLoc, ev.getPlayer());
+			ev.setCancelled(false);
 		}
-		else
+		else if (ev.getBlock().getType() == Material.WOOL || ev.getBlock().getType() == Material.STAINED_GLASS || ev.getBlock().getType() == Material.STAINED_CLAY) {
+			ev.getBlock().setType(Material.AIR);
 			ev.setCancelled(true);
+		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -69,6 +75,15 @@ public class IngameListener implements Listener {
 			else if ((ev.isRightClick() || ev.isLeftClick()) && ev.isShiftClick())
 				gameManager.shopManager.onItemShiftClick((Player) ev.getWhoClicked(), ev.getSlot());
 			ev.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerRespawn(PlayerRespawnEvent ev) {
+		if (gameManager.teamManager.getTeam(ev.getPlayer()).canRespawn())
+			ev.setRespawnLocation(gameManager.locationManager.getSpawnLocation(gameManager.teamManager.getTeam(ev.getPlayer())));
+		else {
+			// TODO: Player cannot respawn! -> He is out
 		}
 	}
 

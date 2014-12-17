@@ -77,9 +77,11 @@ public class GameManager {
 					ev.setMessage(PREFIX + "Noch §e" + ev.getCurrentNumber() + " §6Sekunde" + (ev.getCurrentNumber() == 1 ? "" : "n") + ".");
 				if (ev.getCurrentNumber() == 5) {
 					Bukkit.broadcastMessage(
-								PREFIX + "Map: §e" + map.getDisplayName() + "\n"
-							  + PREFIX + "Von: §e" + map.getBuilderName() + "\n"
-							  + PREFIX + "Type: §e" + map.getTeamCount() + " x " + map.getPlayerCount()
+						  PREFIX + "<------------------------------>" + "\n"
+						+ PREFIX + "| Map:  §e§l" + map.getDisplayName() + "\n"
+						+ PREFIX + "| Von:  §e§l" + map.getBuilderName() + "\n"
+						+ PREFIX + "| Type: §e§l" + map.getTeamCount() + " x " + map.getPlayerCount() + "\n"
+						+ PREFIX + "<------------------------------>"
 					);
 				}
 			}

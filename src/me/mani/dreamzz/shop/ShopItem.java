@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import me.mani.dreamzz.ressource.RessourceType;
 
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -34,6 +35,14 @@ public class ShopItem {
 		meta.setLore(Arrays.asList("§8Preis: " + ressourceType.getColor() + sb.toString() + " " + ressourceType.getDisplayName() + " §8[" + ressourceCount + "]"));
 		rawItem.setItemMeta(meta);
 		return rawItem;
+	}
+	
+	public ShopItem withEnchantment(Enchantment enchantment, int lvl) {
+		if (enchantment.canEnchantItem(rawItem))
+			rawItem.addEnchantment(enchantment, lvl);
+		else
+			rawItem.addUnsafeEnchantment(enchantment, lvl);
+		return this;
 	}
 	
 	public int getSlot() {
