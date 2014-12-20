@@ -69,7 +69,7 @@ public class IngameListener implements Listener {
 	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent ev) {
-		if (gameManager.shopManager.isShopInventory(ev.getClickedInventory()) && ev.getCurrentItem() != null) {
+		if (gameManager.shopManager.isShopInventory(ev.getInventory()) && gameManager.shopManager.isShopInventory(ev.getClickedInventory()) && ev.getCurrentItem() != null) {
 			if ((ev.isRightClick() || ev.isLeftClick()) && !ev.isShiftClick())
 				gameManager.shopManager.onItemClick((Player) ev.getWhoClicked(), ev.getSlot());		
 			else if ((ev.isRightClick() || ev.isLeftClick()) && ev.isShiftClick())

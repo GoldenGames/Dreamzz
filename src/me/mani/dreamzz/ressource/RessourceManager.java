@@ -32,24 +32,29 @@ public class RessourceManager {
 	
 	private class RessourceSpawnThread extends BukkitRunnable {
 
+		int clay = 0;
 		int iron = 0;
 		int gold = 0;
 		
 		@Override
 		public void run() {
-			if (gold == 30) {
+			if (gold == 60) {
 				spawnRessource(RessourceType.GOLD);
 				gold = 0;
 			}
 			else
 				gold++;
-			if (iron == 10) {
+			if (iron == 20) {
 				spawnRessource(RessourceType.IRON);
 				iron = 0;
 			}
 			else
-				iron++;			
-			spawnRessource(RessourceType.CLAY);
+				iron++;	
+			if (clay == 1) {
+				spawnRessource(RessourceType.CLAY);
+				clay = 0;
+			}
+			else clay++;
 		}
 		
 	}

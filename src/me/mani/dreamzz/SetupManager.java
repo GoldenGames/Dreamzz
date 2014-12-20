@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
@@ -59,7 +60,7 @@ public class SetupManager {
 	}
 	
 	private void loadMap() throws Exception {
-		World world = Bukkit.getWorlds().get(0); // THIS IS CARGO, we need an system here
+		World world = Bukkit.createWorld(new WorldCreator("map"));
 		YamlConfiguration mapInfo = YamlConfiguration.loadConfiguration(new File(world.getWorldFolder(), "mapInfo.yml"));
 		
 		String displayName = mapInfo.getString(Alias.MAP_DISPLAY_NAME);

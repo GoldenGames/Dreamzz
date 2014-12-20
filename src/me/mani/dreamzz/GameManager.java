@@ -34,8 +34,6 @@ public class GameManager {
 		
 		GameState.setGameState(GameState.SETUP);
 		
-		// TODO: Add Map choosing system. For now only cargo works
-		
 		SetupManager setupManager = new SetupManager(this, "mapCargo");
 		if(!setupManager.setup()) {
 			stopBootstrap();
