@@ -2,9 +2,19 @@ package me.mani.dreamzz;
 
 import java.util.Arrays;
 
-import me.mani.dreamzz.CountdownManager.Countdown;
+import me.mani.dreamzz.manager.CountdownCallback;
+import me.mani.dreamzz.manager.CountdownCountEvent;
+import me.mani.dreamzz.manager.CountdownManager;
+import me.mani.dreamzz.manager.LocationManager;
+import me.mani.dreamzz.manager.ScoreboardManager;
+import me.mani.dreamzz.manager.SetupManager;
+import me.mani.dreamzz.manager.TeamManager;
+import me.mani.dreamzz.manager.CountdownManager.Countdown;
 import me.mani.dreamzz.ressource.RessourceManager;
 import me.mani.dreamzz.shop.ShopManager;
+import me.mani.dreamzz.util.ParticleEffect;
+import me.mani.dreamzz.util.ParticleEffect.Offset;
+import me.mani.dreamzz.util.ParticleEffect.ParticleEffectType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,6 +32,7 @@ public class GameManager {
 	public LocationManager locationManager;
 	public RessourceManager ressourceManager;
 	public ShopManager shopManager;
+	public ScoreboardManager scoreboardManager;
 	
 	private Map map;
 	private Listener currentListener;
@@ -45,6 +56,7 @@ public class GameManager {
 		locationManager = setupManager.getLocationManager();
 		ressourceManager = setupManager.getRessourceManager();
 		shopManager = setupManager.getShopManager();
+		scoreboardManager = setupManager.getScoreboardManager();
 		
 		Bukkit.getPluginManager().registerEvents(new GlobalListener(this), plugin);
 		
@@ -102,12 +114,16 @@ public class GameManager {
 			if (teamManager.getAllTeams().get(i) == null)
 				i = 0;
 			teamManager.getAllTeams().get(i).addPlayer(p);
+			p.setNoDamageTicks(20);
+			p.setScoreboard(scoreboardManager.getScoreboard());
 			i++;
 		}
 		
 		for (Team team : teamManager.getAllTeams())
 			team.teleport(locationManager.getSpawnLocation(team));
 		
+		scoreboardManager.setupTeams(teamManager);
+		scoreboardManager.update(teamManager);
 		ressourceManager.startSpawning();
 	}
 	
@@ -122,7 +138,9 @@ public class GameManager {
 		Bukkit.broadcastMessage(PREFIX + "Das Bett von Team " + team.getTeamColor().getChatColor() + team.getTeamColor().getDisplayName() + " §6wurde von §e"
 				+ p.getName() + " §6zerstört.");
 		Bukkit.broadcastMessage(PREFIX + "Die Spieler dieses Teams können sich nun §enicht §6mehr wiederbeleben.");
+		ParticleEffect.broadcast(ParticleEffectType.EXPLODE, loc, new Offset(2f, 2f, 2f), 0, 3);
 		team.setRespawn(false);
+		scoreboardManager.update(teamManager);
 	}
 	
 	public JavaPlugin getPlugin() {

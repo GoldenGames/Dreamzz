@@ -1,6 +1,7 @@
-package me.mani.dreamzz;
+package me.mani.dreamzz.manager;
 
-import me.mani.dreamzz.CountdownManager.Countdown;
+import me.mani.dreamzz.manager.CountdownManager.Countdown;
+
 
 public abstract class CountdownCallback {
 	

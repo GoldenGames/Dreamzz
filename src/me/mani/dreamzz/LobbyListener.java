@@ -19,6 +19,7 @@ public class LobbyListener implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent ev) {
 		ev.setJoinMessage(GameManager.PREFIX + "§a[>>>] §e" + ev.getPlayer().getName());
+		ev.getPlayer().teleport(gameManager.locationManager.getLobbySpawn());
 	}
 	
 	@EventHandler

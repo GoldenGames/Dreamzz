@@ -1,4 +1,6 @@
-package me.mani.dreamzz;
+package me.mani.dreamzz.manager;
+
+import me.mani.dreamzz.Dreamzz;
 
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;

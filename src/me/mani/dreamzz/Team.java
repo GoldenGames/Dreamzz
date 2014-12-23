@@ -3,6 +3,8 @@ package me.mani.dreamzz;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.mani.dreamzz.util.TeamColor;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -25,6 +27,14 @@ public class Team {
 	
 	public boolean containsPlayer(Player p) {
 		return players.contains(p);
+	}
+	
+	public void removePlayer(Player p) {
+		players.remove(p);
+	}
+	
+	public List<Player> getPlayers() {
+		return players;
 	}
 	
 	public void teleport(Location loc) {

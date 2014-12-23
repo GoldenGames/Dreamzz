@@ -3,17 +3,25 @@ package me.mani.dreamzz;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.mani.dreamzz.SpecialItems.Type;
+import net.minecraft.server.v1_7_R4.Explosion;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Explosive;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.material.Bed;
 
@@ -39,9 +47,10 @@ public class IngameListener implements Listener {
 			if (bed.isHeadOfBed())
 				bedLoc = ev.getBlock().getLocation();
 			else 
-				bedLoc = ev.getBlock().getRelative(bed.getFacing()).getLocation();	
+				bedLoc = ev.getBlock().getRelative(bed.getFacing()).getLocation();
 			gameManager.onBedBreak(bedLoc, ev.getPlayer());
-			ev.setCancelled(false);
+			bedLoc.getBlock().setType(Material.AIR);
+			ev.setCancelled(true);
 		}
 		else if (ev.getBlock().getType() == Material.WOOL || ev.getBlock().getType() == Material.STAINED_GLASS || ev.getBlock().getType() == Material.STAINED_CLAY) {
 			ev.getBlock().setType(Material.AIR);
@@ -57,6 +66,14 @@ public class IngameListener implements Listener {
 			byte data = (byte) (0 + (int) (Math.random() * ((15 - 0) + 1)));
 			ev.getBlock().setData(data);
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent ev) {
+		if (ev.getAction() == Action.PHYSICAL || ev.getItem() == null || !Type.hasType(ev.getItem().getType()))
+			return;
+		SpecialItems.castSpecialItem(Type.getType(ev.getItem().getType()), ev.getPlayer(), ev.getAction());
+		ev.setCancelled(true);
 	}
 	
 	@EventHandler

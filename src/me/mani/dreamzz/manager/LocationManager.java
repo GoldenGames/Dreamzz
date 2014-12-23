@@ -1,16 +1,18 @@
-package me.mani.dreamzz;
+package me.mani.dreamzz.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import me.mani.dreamzz.Team;
+
 import org.bukkit.Location;
 
 public class LocationManager {
 
-	private Location spawnLocation;
-	private Location statsLocation;
+	private Location lobbySpawn;
+	private Location statsDisplay;
 	
 	private HashMap<Team, Location> spawnLocations;
 	private HashMap<Team, Location> bedLocations;
@@ -18,12 +20,20 @@ public class LocationManager {
 	private List<Location> ressourceLocations = new ArrayList<>();;
 	
 	public LocationManager(Location spawnLocation, Location statsLocation, HashMap<Team, Location> spawnLocations, HashMap<Team, Location> bedLocations) {
-		this.spawnLocation = spawnLocation;
-		this.statsLocation = statsLocation;
+		this.lobbySpawn = spawnLocation;
+		this.statsDisplay = statsLocation;
 		this.spawnLocations = spawnLocations;
 		this.bedLocations = bedLocations;
 	}
 	
+	public Location getLobbySpawn() {
+		return lobbySpawn;
+	}
+
+	public Location getStatsDisplay() {
+		return statsDisplay;
+	}
+
 	public void addRessource(Location loc) {
 		ressourceLocations.add(loc);
 	}

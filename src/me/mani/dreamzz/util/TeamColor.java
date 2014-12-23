@@ -1,4 +1,4 @@
-package me.mani.dreamzz;
+package me.mani.dreamzz.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;

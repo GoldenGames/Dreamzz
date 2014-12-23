@@ -1,6 +1,8 @@
-package me.mani.dreamzz;
+package me.mani.dreamzz.manager;
 
 import java.util.List;
+
+import me.mani.dreamzz.Team;
 
 import org.bukkit.entity.Player;
 

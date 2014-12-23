@@ -1,4 +1,4 @@
-package me.mani.dreamzz;
+package me.mani.dreamzz.manager;
 
 import org.bukkit.Sound;
 
