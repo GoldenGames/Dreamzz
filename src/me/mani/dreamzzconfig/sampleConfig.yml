@@ -1,0 +1,21 @@
+mapName: name
+builderName: 'Builder or BuildTeam name'
+displayName: 'Full map name'
+teamCount: 4
+playerCount: 4
+mapRadius: 50
+centerLocation: '0;0;0;0;0'
+
+teams:
+  teamRED:
+    spawn: '0;0;0;0;0'
+    bed: '0;0;0;0;0'
+  teamBLUE:
+    spawn: '0;0;0;0;0'
+    bed: '0;0;0;0;0'
+  teamGREEN:
+    spawn: '0;0;0;0;0'
+    bed: '0;0;0;0;0'
+  teamYELLOW:
+    spawn: '0;0;0;0;0'
+    bed: '0;0;0;0;0'

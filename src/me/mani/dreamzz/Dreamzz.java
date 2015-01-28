@@ -1,6 +1,5 @@
 package me.mani.dreamzz;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -14,6 +13,11 @@ public class Dreamzz extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		if (getServer().getPluginManager().isPluginEnabled("DreamzzSetup")) {
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+		
 		dreamzzInstance = this;
 		
 		gameManager = new GameManager(this);
@@ -22,11 +26,11 @@ public class Dreamzz extends JavaPlugin {
 	
 	public static Plugin getInstance() {
 		return dreamzzInstance;
-	}
+	}	
 	
 	public static void broadcastSound(Sound sound) {
-		for (Player p : Bukkit.getOnlinePlayers())
+		for (Player p : dreamzzInstance.getServer().getOnlinePlayers()) {
 			p.playSound(p.getLocation(), sound, 1f, 1f);
+		}
 	}
-	
 }

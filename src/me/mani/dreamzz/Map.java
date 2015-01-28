@@ -11,17 +11,19 @@ public class Map {
 	private String builderName;
 	private int teamCount;
 	private int playerCount;
+	private int mapRadius;
 	private YamlConfiguration mapInfo;
 	
 	private static Map currentMap;
 	
-	public Map(World world, String mapName, String displayName, String builderName, int teamCount, int playerCount, YamlConfiguration mapInfo) {
+	public Map(World world, String mapName, String displayName, String builderName, int teamCount, int playerCount, int mapRadius, YamlConfiguration mapInfo) {
 		this.world = world;
 		this.mapName = mapName;
 		this.displayName = displayName;
 		this.builderName = builderName;
 		this.teamCount = teamCount;
 		this.playerCount = playerCount;
+		this.mapRadius = mapRadius;
 		this.mapInfo = mapInfo;
 		currentMap = this;
 	}
@@ -48,6 +50,10 @@ public class Map {
 
 	public int getPlayerCount() {
 		return playerCount;
+	}
+	
+	public int getMapRadius() {
+		return mapRadius;
 	}
 
 	public YamlConfiguration getMapInfo() {

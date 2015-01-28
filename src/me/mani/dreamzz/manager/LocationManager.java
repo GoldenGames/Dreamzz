@@ -16,14 +16,16 @@ public class LocationManager {
 	
 	private HashMap<Team, Location> spawnLocations;
 	private HashMap<Team, Location> bedLocations;
+	private Location centerLocation;
 	
 	private List<Location> ressourceLocations = new ArrayList<>();;
 	
-	public LocationManager(Location spawnLocation, Location statsLocation, HashMap<Team, Location> spawnLocations, HashMap<Team, Location> bedLocations) {
+	public LocationManager(Location spawnLocation, Location statsLocation, HashMap<Team, Location> spawnLocations, HashMap<Team, Location> bedLocations, Location centerLocation) {
 		this.lobbySpawn = spawnLocation;
 		this.statsDisplay = statsLocation;
 		this.spawnLocations = spawnLocations;
 		this.bedLocations = bedLocations;
+		this.centerLocation = centerLocation;
 	}
 	
 	public Location getLobbySpawn() {
@@ -44,6 +46,10 @@ public class LocationManager {
 	
 	public Location getBedLocation(Team team) {
 		return bedLocations.get(team);
+	}
+	
+	public Location getCenterLocation() {
+		return centerLocation;
 	}
 	
 	public Team getTeam(Location bedLoc) {

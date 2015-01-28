@@ -19,11 +19,13 @@ import me.mani.goldenapi.mysql.ConvertUtil;
 import me.mani.goldenapi.mysql.DatabaseManager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -69,13 +71,15 @@ public class SetupManager {
 	
 	private void loadMap() throws Exception {
 		World world = Bukkit.createWorld(new WorldCreator("map"));
+		world.setSpawnFlags(false, false);
 		YamlConfiguration mapInfo = YamlConfiguration.loadConfiguration(new File(world.getWorldFolder(), "mapInfo.yml"));
 		
 		String displayName = mapInfo.getString(Alias.MAP_DISPLAY_NAME);
 		String builderName = mapInfo.getString(Alias.MAP_BUILDER_NAME);
 		int teamCount = mapInfo.getInt(Alias.MAP_TEAM_COUNT);
 		int playerCount = mapInfo.getInt(Alias.MAP_PLAYER_COUNT);
-		map = new Map(world, mapName, displayName, builderName, teamCount, playerCount, mapInfo);
+		int mapRadius = mapInfo.getInt(Alias.MAP_RADIUS);
+		map = new Map(world, mapName, displayName, builderName, teamCount, playerCount, mapRadius, mapInfo);
 	}
 	
 	private void loadLocations() throws Exception {
@@ -99,20 +103,37 @@ public class SetupManager {
 		}
 		
 		Location lobbySpawn = ConvertUtil.toLocation(String.valueOf(dbManager.get(Alias.TABLE, Alias.SETTING, "lobbySpawn", Alias.VALUE)), Bukkit.getWorld("world"));
+		Location centerLocation = ConvertUtil.toLocation(map.getMapInfo().getString(Alias.MAP_CENTER_LOCATION), map.getWorld());
 		
 		teamManager = new TeamManager(allTeams);
-		locationManager = new LocationManager(lobbySpawn, null, spawnLocations, bedLocations);
+		locationManager = new LocationManager(lobbySpawn, null, spawnLocations, bedLocations, centerLocation);
 		
 		// Ressource Locations
 		
 		ressourceManager = new RessourceManager(gameManager.getPlugin());
-				
-		for (String s : map.getMapInfo().getStringList("goldSpawner"))
-			ressourceManager.registerRessource(new Ressource(RessourceType.GOLD, ConvertUtil.toLocation(s, map.getWorld())));
-		for (String s : map.getMapInfo().getStringList("ironSpawner"))
-			ressourceManager.registerRessource(new Ressource(RessourceType.IRON, ConvertUtil.toLocation(s, map.getWorld())));
-		for (String s : map.getMapInfo().getStringList("claySpawner"))
-			ressourceManager.registerRessource(new Ressource(RessourceType.CLAY, ConvertUtil.toLocation(s, map.getWorld())));
+			
+		long timeBefore = System.currentTimeMillis();
+		int blocksScanned = 0;
+		
+		for (int x = centerLocation.getBlockX() - map.getMapRadius(); x < (centerLocation.getBlockX() + map.getMapRadius()); x++) {
+			for (int z = centerLocation.getBlockZ() - map.getMapRadius(); z < (centerLocation.getBlockZ() + map.getMapRadius()); z++) {
+				Chunk c = map.getWorld().getChunkAt(x * 16, z * 16);
+				if (!c.isLoaded())
+					c.load();
+				for (int y = 0; y < map.getWorld().getHighestBlockYAt(x, z); y++) {	
+					Block b = map.getWorld().getBlockAt(x, y, z);
+					if (b.getType() == RessourceType.CLAY.getBlockMaterial())
+						ressourceManager.registerRessource(new Ressource(RessourceType.CLAY, b.getLocation()));
+					else if (b.getType() == RessourceType.IRON.getBlockMaterial())
+						ressourceManager.registerRessource(new Ressource(RessourceType.IRON, b.getLocation()));
+					else if (b.getType() == RessourceType.GOLD.getBlockMaterial())
+						ressourceManager.registerRessource(new Ressource(RessourceType.GOLD, b.getLocation()));
+					blocksScanned++;
+				}
+			}
+		}
+		
+		System.out.println(blocksScanned + " blocks scanned! Took " + (System.currentTimeMillis() - timeBefore) / 1000 + " sec.");
 	}
 	
 	private void loadScoreboard() {

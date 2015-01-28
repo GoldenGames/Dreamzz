@@ -13,6 +13,8 @@ public class Alias {
 	public static final String MAP_BUILDER_NAME = "builderName";
 	public static final String MAP_TEAM_COUNT = "teamCount";
 	public static final String MAP_PLAYER_COUNT = "playerCount";
+	public static final String MAP_RADIUS = "mapRadius";
+	public static final String MAP_CENTER_LOCATION = "centerLocation";
 	
 	public static String getTeamAlias(TeamColor teamColor) {
 		return "team" + teamColor.toString().toUpperCase();
