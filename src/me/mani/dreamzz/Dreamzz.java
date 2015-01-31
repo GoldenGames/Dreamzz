@@ -9,7 +9,7 @@ public class Dreamzz extends JavaPlugin {
 
 	private static JavaPlugin dreamzzInstance; 
 	
-	private GameManager gameManager;
+	public GameManager gameManager;
 	
 	@Override
 	public void onEnable() {

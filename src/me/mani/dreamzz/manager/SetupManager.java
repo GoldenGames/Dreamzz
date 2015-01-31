@@ -3,17 +3,29 @@ package me.mani.dreamzz.manager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import me.mani.dreamzz.Alias;
 import me.mani.dreamzz.GameManager;
 import me.mani.dreamzz.Map;
 import me.mani.dreamzz.Team;
+import me.mani.dreamzz.listener.AsyncPlayerChatListener;
+import me.mani.dreamzz.listener.AsyncPlayerPreLoginListener;
+import me.mani.dreamzz.listener.BlockBreakListener;
+import me.mani.dreamzz.listener.BlockPlaceListener;
+import me.mani.dreamzz.listener.EntityDamageListener;
+import me.mani.dreamzz.listener.PlayerJoinListener;
+import me.mani.dreamzz.listener.PlayerQuitListener;
 import me.mani.dreamzz.ressource.Ressource;
 import me.mani.dreamzz.ressource.RessourceManager;
 import me.mani.dreamzz.ressource.RessourceType;
 import me.mani.dreamzz.shop.ShopManager;
+import me.mani.dreamzz.util.RessourceBlockCatcher;
 import me.mani.dreamzz.util.TeamColor;
+import me.mani.dreamzz.util.WorldLocation;
 import me.mani.goldenapi.GoldenAPI;
 import me.mani.goldenapi.mysql.ConvertUtil;
 import me.mani.goldenapi.mysql.DatabaseManager;
@@ -21,7 +33,6 @@ import me.mani.goldenapi.mysql.DatabaseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
@@ -55,6 +66,7 @@ public class SetupManager {
 			loadMap();
 			loadLocations();
 			loadScoreboard();
+			registerListener();
 			shopManager = new ShopManager();
 		}
 		catch (Exception e) {
@@ -113,27 +125,28 @@ public class SetupManager {
 		ressourceManager = new RessourceManager(gameManager.getPlugin());
 			
 		long timeBefore = System.currentTimeMillis();
-		int blocksScanned = 0;
+		Set<RessourceBlockCatcher> catcher = new HashSet<>();
 		
-		for (int x = centerLocation.getBlockX() - map.getMapRadius(); x < (centerLocation.getBlockX() + map.getMapRadius()); x++) {
-			for (int z = centerLocation.getBlockZ() - map.getMapRadius(); z < (centerLocation.getBlockZ() + map.getMapRadius()); z++) {
-				Chunk c = map.getWorld().getChunkAt(x * 16, z * 16);
+		for (int x = (centerLocation.getBlockX() - map.getMapRadius()) / 16; x < (centerLocation.getBlockX() + map.getMapRadius()) / 16; x++) {
+			for (int z = (centerLocation.getBlockZ() - map.getMapRadius()) / 16; z < (centerLocation.getBlockZ() + map.getMapRadius()) / 16; z++) {
+				Chunk c = map.getWorld().getChunkAt(x, z);
 				if (!c.isLoaded())
 					c.load();
-				for (int y = 0; y < map.getWorld().getHighestBlockYAt(x, z); y++) {	
-					Block b = map.getWorld().getBlockAt(x, y, z);
-					if (b.getType() == RessourceType.CLAY.getBlockMaterial())
-						ressourceManager.registerRessource(new Ressource(RessourceType.CLAY, b.getLocation()));
-					else if (b.getType() == RessourceType.IRON.getBlockMaterial())
-						ressourceManager.registerRessource(new Ressource(RessourceType.IRON, b.getLocation()));
-					else if (b.getType() == RessourceType.GOLD.getBlockMaterial())
-						ressourceManager.registerRessource(new Ressource(RessourceType.GOLD, b.getLocation()));
-					blocksScanned++;
-				}
+				RessourceBlockCatcher ressourceBlockCatcher = new RessourceBlockCatcher(c.getChunkSnapshot());
+				catcher.add(ressourceBlockCatcher);
+				ressourceBlockCatcher.getRessourceLocations((Set<WorldLocation> worldLocations) -> {
+					for (WorldLocation worldLocation : worldLocations) {
+						Block b = map.getWorld().getBlockAt(worldLocation.getX(), worldLocation.getY(), worldLocation.getZ());
+						if (b.getType() == RessourceType.CLAY.getBlockMaterial())
+							ressourceManager.registerRessource(new Ressource(RessourceType.CLAY, b.getLocation()));
+						else if (b.getType() == RessourceType.IRON.getBlockMaterial())
+							ressourceManager.registerRessource(new Ressource(RessourceType.IRON, b.getLocation()));
+						else if (b.getType() == RessourceType.GOLD.getBlockMaterial())
+							ressourceManager.registerRessource(new Ressource(RessourceType.GOLD, b.getLocation()));
+					}
+				});
 			}
 		}
-		
-		System.out.println(blocksScanned + " blocks scanned! Took " + (System.currentTimeMillis() - timeBefore) / 1000 + " sec.");
 	}
 	
 	private void loadScoreboard() {
@@ -141,6 +154,16 @@ public class SetupManager {
 		Objective objective = scoreboard.registerNewObjective("§7[§aDreamzz§7]", "dummy");
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		scoreboardManager = new ScoreboardManager(scoreboard, objective);
+	}
+	
+	private void registerListener() {
+		new AsyncPlayerChatListener();
+		new AsyncPlayerPreLoginListener();
+		new BlockBreakListener();
+		new BlockPlaceListener();
+		new EntityDamageListener();
+		new PlayerJoinListener();
+		new PlayerQuitListener();
 	}
 	
 	public Map getMap() {

@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import me.mani.dreamzz.util.ParticleEffect;
-import me.mani.dreamzz.util.ParticleEffect.Offset;
-import me.mani.dreamzz.util.ParticleEffect.ParticleEffectType;
-
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -50,7 +47,7 @@ public class SpecialItems {
 			else
 				return;
 			Location loc = center.getDirection().multiply(i * 1.1f).toLocation(p.getWorld()).add(center);
-			ParticleEffect.broadcast(ParticleEffectType.FLAME, loc, new Offset(0.5F, 0.5F, 0.5F), 0, 25);
+			loc.getWorld().spigot().playEffect(loc, Effect.FLAME, 0, 0, 0.5F, 0.5F, 0.5F, 0, 25, 100);
 			if (i > 5)
 				loc.getWorld().strikeLightning(loc);
 			}

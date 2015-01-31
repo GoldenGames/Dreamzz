@@ -5,22 +5,19 @@ import java.util.Arrays;
 import me.mani.dreamzz.manager.CountdownCallback;
 import me.mani.dreamzz.manager.CountdownCountEvent;
 import me.mani.dreamzz.manager.CountdownManager;
+import me.mani.dreamzz.manager.CountdownManager.Countdown;
 import me.mani.dreamzz.manager.LocationManager;
+import me.mani.dreamzz.manager.Players;
 import me.mani.dreamzz.manager.ScoreboardManager;
 import me.mani.dreamzz.manager.SetupManager;
 import me.mani.dreamzz.manager.TeamManager;
-import me.mani.dreamzz.manager.CountdownManager.Countdown;
 import me.mani.dreamzz.ressource.RessourceManager;
 import me.mani.dreamzz.shop.ShopManager;
-import me.mani.dreamzz.util.ParticleEffect;
-import me.mani.dreamzz.util.ParticleEffect.Offset;
-import me.mani.dreamzz.util.ParticleEffect.ParticleEffectType;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class GameManager {
@@ -35,7 +32,8 @@ public class GameManager {
 	public ScoreboardManager scoreboardManager;
 	
 	private Map map;
-	private Listener currentListener;
+	
+	private Countdown gameCountdown;
 	
 	public GameManager(JavaPlugin plugin) {
 		this.plugin = plugin;
@@ -58,27 +56,29 @@ public class GameManager {
 		shopManager = setupManager.getShopManager();
 		scoreboardManager = setupManager.getScoreboardManager();
 		
-		Bukkit.getPluginManager().registerEvents(new GlobalListener(this), plugin);
+		GameState.setGameState(GameState.LOBBY);
 		
-		startGameLobby();
 	}
 	
 	public void stopBootstrap() {
 		plugin.getServer().shutdown();
 	}
 	
-	public void startGameLobby() {
-		
-		GameState.setGameState(GameState.LOBBY);
-		
-		currentListener = new LobbyListener(this);
-		Bukkit.getPluginManager().registerEvents(currentListener, plugin);
-		
-		Countdown c = CountdownManager.createCountdown(new CountdownCallback() {
+	public boolean canStart() {
+		return Players.getPlayerCount() >= Players.NEEDED_TO_START;
+	}
+	
+	public boolean isStarting() {
+		return gameCountdown != null;
+	}
+	
+	public void startGameCountdown() {
+
+		gameCountdown = CountdownManager.createCountdown(new CountdownCallback() {
 			
 			@Override
 			public void onCountdownFinish() {
-				startGameIngame();
+				startGame();
 			}
 			
 			@Override
@@ -87,11 +87,11 @@ public class GameManager {
 					ev.setMessage(PREFIX + "Noch §e" + ev.getCurrentNumber() + " §6Sekunde" + (ev.getCurrentNumber() == 1 ? "" : "n") + ".");
 				if (ev.getCurrentNumber() == 5) {
 					Bukkit.broadcastMessage(
-						  PREFIX + "<------------------------------>" + "\n"
+						  PREFIX + "<--------------------->" + "\n"
 						+ PREFIX + "| Map:  §e§l" + map.getDisplayName() + "\n"
 						+ PREFIX + "| Von:  §e§l" + map.getBuilderName() + "\n"
 						+ PREFIX + "| Type: §e§l" + map.getTeamCount() + " x " + map.getPlayerCount() + "\n"
-						+ PREFIX + "<------------------------------>"
+						+ PREFIX + "<--------------------->"
 					);
 				}
 			}
@@ -100,13 +100,18 @@ public class GameManager {
 		
 	}
 	
-	public void startGameIngame() {
+	public void cancelGameCountdown() {
+		
+		gameCountdown.forceStop();
+		gameCountdown = null;
+		
+		Bukkit.broadcastMessage(PREFIX + "Der Countdown wurde wegen zu wenigen Spielern gestoppt!");
+		
+	}
+	
+	public void startGame() {
 		
 		GameState.setGameState(GameState.INGAME);
-		
-		HandlerList.unregisterAll(currentListener);
-		currentListener = new IngameListener(this);
-		Bukkit.getPluginManager().registerEvents(currentListener, plugin);
 		
 		int i = 0;
 		
@@ -129,18 +134,25 @@ public class GameManager {
 	
 	public void stopGame() {
 		
+		// TODO: Game end
+		
 	}
 
-	public void onBedBreak(Location loc, Player p) {
+	public boolean onBedBreak(Location loc, Player p) {
 		Team team = locationManager.getTeam(loc);
 		if (team == null)
-			return;
+			return false;
+		else if (team == teamManager.getTeam(p)) {	
+			p.sendMessage(PREFIX + "Du kannst dein eigenes Bett nicht zerstören!");
+			return false;
+		}
 		Bukkit.broadcastMessage(PREFIX + "Das Bett von Team " + team.getTeamColor().getChatColor() + team.getTeamColor().getDisplayName() + " §6wurde von §e"
 				+ p.getName() + " §6zerstört.");
 		Bukkit.broadcastMessage(PREFIX + "Die Spieler dieses Teams können sich nun §enicht §6mehr wiederbeleben.");
-		ParticleEffect.broadcast(ParticleEffectType.EXPLODE, loc, new Offset(2f, 2f, 2f), 0, 3);
+		map.getWorld().spigot().playEffect(loc, Effect.EXPLOSION);
 		team.setRespawn(false);
 		scoreboardManager.update(teamManager);
+		return true;
 	}
 	
 	public JavaPlugin getPlugin() {
