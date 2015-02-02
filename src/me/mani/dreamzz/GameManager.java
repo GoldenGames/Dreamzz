@@ -57,7 +57,6 @@ public class GameManager {
 		scoreboardManager = setupManager.getScoreboardManager();
 		
 		GameState.setGameState(GameState.LOBBY);
-		
 	}
 	
 	public void stopBootstrap() {

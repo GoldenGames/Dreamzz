@@ -30,7 +30,7 @@ public class ScoreboardManager {
 		for (String s : scoreboard.getEntries())
 			scoreboard.resetScores(s);
 		for (Team team : teamManager.getAllTeams())
-			objective.getScore((team.canRespawn() ? "§a" : "§7") + "\u00db " + team.getTeamColor().getChatColor() + team.getTeamColor().getDisplayName()).setScore(team.getPlayers().size());
+			objective.getScore((team.canRespawn() ? team.getTeamColor().getChatColor() : "§7") + "█ " + team.getTeamColor().getDisplayName()).setScore(team.getPlayers().size());
 	}
 	
 	public Scoreboard getScoreboard() {

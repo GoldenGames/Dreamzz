@@ -1,4 +1,4 @@
 name: Dreamzz
-version: 0.1
+version: 0.2
 main: me.mani.dreamzz.Dreamzz
 depend: [GoldenAPI]

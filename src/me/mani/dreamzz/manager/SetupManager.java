@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import me.mani.dreamzz.Alias;
 import me.mani.dreamzz.GameManager;
@@ -17,8 +16,12 @@ import me.mani.dreamzz.listener.AsyncPlayerPreLoginListener;
 import me.mani.dreamzz.listener.BlockBreakListener;
 import me.mani.dreamzz.listener.BlockPlaceListener;
 import me.mani.dreamzz.listener.EntityDamageListener;
+import me.mani.dreamzz.listener.InventoryClickListener;
+import me.mani.dreamzz.listener.PlayerInteractEntityListener;
+import me.mani.dreamzz.listener.PlayerInteractListener;
 import me.mani.dreamzz.listener.PlayerJoinListener;
 import me.mani.dreamzz.listener.PlayerQuitListener;
+import me.mani.dreamzz.listener.PlayerRespawnListener;
 import me.mani.dreamzz.ressource.Ressource;
 import me.mani.dreamzz.ressource.RessourceManager;
 import me.mani.dreamzz.ressource.RessourceType;
@@ -124,7 +127,6 @@ public class SetupManager {
 		
 		ressourceManager = new RessourceManager(gameManager.getPlugin());
 			
-		long timeBefore = System.currentTimeMillis();
 		Set<RessourceBlockCatcher> catcher = new HashSet<>();
 		
 		for (int x = (centerLocation.getBlockX() - map.getMapRadius()) / 16; x < (centerLocation.getBlockX() + map.getMapRadius()) / 16; x++) {
@@ -162,8 +164,12 @@ public class SetupManager {
 		new BlockBreakListener();
 		new BlockPlaceListener();
 		new EntityDamageListener();
+		new InventoryClickListener();
+		new PlayerInteractEntityListener();
+		new PlayerInteractListener();
 		new PlayerJoinListener();
 		new PlayerQuitListener();
+		new PlayerRespawnListener();
 	}
 	
 	public Map getMap() {

@@ -1,9 +1,7 @@
 package me.mani.dreamzz.listener;
 
-import me.mani.dreamzz.GameManager;
 import me.mani.dreamzz.GameState;
 import me.mani.dreamzz.manager.Blocks;
-import me.mani.dreamzz.manager.Players;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,7 +35,7 @@ public class BlockBreakListener extends DreamzzListener {
 					bedLocation = b.getLocation();
 				else 
 					bedLocation = b.getRelative(bed.getFacing()).getLocation();
-				if (!dreamzz.gameManager.onBedBreak(bedLocation, p))
+				if (dreamzz.gameManager.onBedBreak(bedLocation, p))
 					bedLocation.getBlock().setType(Material.AIR);
 				ev.setCancelled(true);
 			}
