@@ -25,7 +25,7 @@ public class AsyncPlayerChatListener extends DreamzzListener {
 				ev.setFormat("§bMAP §8> §e" + p.getName() + " §8> §b" + msg.substring(1));
 			else {
 				ev.setFormat("§dTEAM §8> §e" + p.getName() + " §8> §d" + msg);
-				ev.getRecipients().removeIf((Player reciever) -> dreamzz.gameManager.teamManager.getTeam(reciever) == p);
+				ev.getRecipients().removeIf((Player reciever) -> dreamzz.gameManager.teamManager.getTeam(reciever) != dreamzz.gameManager.teamManager.getTeam(p));
 			}
 			
 		}

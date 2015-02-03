@@ -54,19 +54,22 @@ public class ShopInventory {
 		shopManager.registerShopItem(new ShopItem(14, "Essen", "III", new ItemStack(Material.GOLDEN_APPLE), RessourceType.GOLD, 2));
 		shopManager.registerShopItem(new ShopItem(16, "Essen", "IV", new ItemStack(Material.CAKE), RessourceType.IRON, 1));
 		
-		// Blöcke (Total: 4)
+		// Blöcke (Total: 7)
 		
-		shopManager.registerShopItem(new ShopItem(19, "Block", "I", new ItemStack(Material.WOOL), RessourceType.CLAY, 1));
-		shopManager.registerShopItem(new ShopItem(21, "Block", "II", new ItemStack(Material.STAINED_GLASS), RessourceType.CLAY, 3));
-		shopManager.registerShopItem(new ShopItem(23, "Block", "III", new ItemStack(Material.STAINED_CLAY), RessourceType.IRON, 2));
-		shopManager.registerShopItem(new ShopItem(25, "Liste", "", new ItemStack(Material.CHEST), RessourceType.IRON, 1));
+		shopManager.registerShopItem(new ShopItem(19, "Block", "I", new ItemStack(Material.SANDSTONE, 2, (short) 2), RessourceType.CLAY, 1));
+		shopManager.registerShopItem(new ShopItem(20, "Block", "II", new ItemStack(Material.ENDER_STONE), RessourceType.CLAY, 8));
+		shopManager.registerShopItem(new ShopItem(21, "Block", "III", new ItemStack(Material.IRON_BLOCK), RessourceType.IRON, 1));
+		shopManager.registerShopItem(new ShopItem(22, "Kiste", "", new ItemStack(Material.CHEST), RessourceType.IRON, 1));
+		shopManager.registerShopItem(new ShopItem(23, "Glas", "", new ItemStack(Material.GLASS), RessourceType.CLAY, 2));
+		shopManager.registerShopItem(new ShopItem(24, "Seelensand", "", new ItemStack(Material.SOUL_SAND), RessourceType.IRON, 1));
+		shopManager.registerShopItem(new ShopItem(25, "Schleimblock", "", new ItemStack(Material.SLIME_BLOCK), RessourceType.GOLD, 1));
 		
-		// Werkzeuge (Total: 4)
 		
-		shopManager.registerShopItem(new ShopItem(28, "Schere", "I", new ItemStack(Material.SHEARS), RessourceType.CLAY, 5));
-		shopManager.registerShopItem(new ShopItem(30, "Schere", "II", new ItemStack(Material.SHEARS), RessourceType.IRON, 3));
-		shopManager.registerShopItem(new ShopItem(32, "Spitzhacke", "I", new ItemStack(Material.WOOD_PICKAXE), RessourceType.IRON, 4));
-		shopManager.registerShopItem(new ShopItem(34, "Spitzhacke", "II", new ItemStack(Material.GOLD_PICKAXE), RessourceType.GOLD, 4));
+		// Werkzeuge (Total: 3)
+		
+		shopManager.registerShopItem(new ShopItem(28, "Spitzhacke", "I", new ItemStack(Material.WOOD_PICKAXE), RessourceType.CLAY, 4));
+		shopManager.registerShopItem(new ShopItem(31, "Spitzhacke", "II", new ItemStack(Material.GOLD_PICKAXE), RessourceType.IRON, 2));
+		shopManager.registerShopItem(new ShopItem(34, "Spitzhacke", "III", new ItemStack(Material.IRON_PICKAXE), RessourceType.GOLD, 2));
 		
 		// Rüstung (Total: 6)
 		

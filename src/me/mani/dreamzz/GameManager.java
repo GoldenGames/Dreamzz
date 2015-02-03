@@ -148,7 +148,7 @@ public class GameManager {
 		Bukkit.broadcastMessage(PREFIX + "Das Bett von Team " + team.getTeamColor().getChatColor() + team.getTeamColor().getDisplayName() + " §6wurde von §e"
 				+ p.getName() + " §6zerstört.");
 		Bukkit.broadcastMessage(PREFIX + "Die Spieler dieses Teams können sich nun §enicht §6mehr wiederbeleben.");
-		map.getWorld().spigot().playEffect(loc, Effect.EXPLOSION);
+		map.getWorld().spigot().playEffect(loc.add(0.5, 0.5, 0.5), Effect.EXPLOSION_LARGE, 0, 0, 2, 2, 2, 0.5f, 10, 64);
 		team.setRespawn(false);
 		scoreboardManager.update(teamManager);
 		return true;

@@ -35,14 +35,14 @@ public class BlockBreakListener extends DreamzzListener {
 					bedLocation = b.getLocation();
 				else 
 					bedLocation = b.getRelative(bed.getFacing()).getLocation();
-				if (dreamzz.gameManager.onBedBreak(bedLocation, p))
-					bedLocation.getBlock().setType(Material.AIR);
+				if (dreamzz.gameManager.onBedBreak(bedLocation, p)) {
+					bedLocation.getBlock().setType(Material.AIR, false);
+					bedLocation.getBlock().getRelative(bed.getFacing().getOppositeFace()).setType(Material.AIR, false);
+				}
 				ev.setCancelled(true);
 			}
-			else if (b.getType() == Material.WOOL || b.getType() == Material.STAINED_CLAY) {
-				b.setType(Material.AIR);
+			else 
 				ev.setCancelled(true);
-			}
 			
 		}
 		else if (GameState.getGameState() == GameState.SHUTDOWN) {

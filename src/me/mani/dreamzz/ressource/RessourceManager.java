@@ -50,7 +50,7 @@ public class RessourceManager {
 			}
 			else
 				iron++;	
-			if (clay == 1) {
+			if (clay == 2) {
 				spawnRessource(RessourceType.CLAY);
 				clay = 0;
 			}

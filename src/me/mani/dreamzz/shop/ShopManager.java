@@ -1,12 +1,16 @@
 package me.mani.dreamzz.shop;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import me.mani.dreamzz.GameManager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventoryPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -84,18 +88,28 @@ public class ShopManager {
 		if (!isShopItem(slot))
 			return;
 		ShopItem item = getShopItem(slot);
-		PlayerInventory inv = p.getInventory();
+		PlayerInventory inv = p.getInventory();	
 		ItemStack readyItem = item.toItemStack();
 		ItemStack ressourceNeeded = item.getRessourceType().toItemStack();
-		ressourceNeeded.setAmount(item.getRessourceCount());
+		ressourceNeeded.setAmount(item.getRessourceCount());	
+		if (!inv.containsAtLeast(ressourceNeeded, item.getRessourceCount())) {
+			p.sendMessage(GameManager.PREFIX + "Du hast nicht genügend Ressourcen für den Kauf!");
+			p.playSound(p.getLocation(), Sound.ANVIL_LAND, 0.1f, 1f);
+			return;
+		}	
+		Inventory clone = Bukkit.createInventory(null, 9 * 4);
+		clone.setContents(inv.getContents());
 		int times = 0;
 		while (inv.containsAtLeast(ressourceNeeded, item.getRessourceCount())) {
-			if (inv.addItem(readyItem).isEmpty() && times <= 64)
+			HashMap<Integer, ItemStack> remainingItems = clone.addItem(readyItem);
+			if (remainingItems.isEmpty() && times < 64)
 				inv.removeItem(ressourceNeeded);
 			else
 				break;
 			times++;
 		}
+		for (int i = 0; i < times; i++)
+			inv.addItem(readyItem);
 		p.playSound(p.getLocation(), Sound.ORB_PICKUP, 0.1f, 1f);
 	}
 
